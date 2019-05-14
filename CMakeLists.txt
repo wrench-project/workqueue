@@ -28,6 +28,8 @@ include_directories(src/ include/ /usr/local/include /usr/local/include/wrench)
 # source files
 set(SOURCE_FILES
         src/WorkQueue.cpp
+        src/SimulationConfig.h
+        src/SimulationConfig.cpp
         )
 
 set(TEST_FILES
