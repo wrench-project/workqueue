@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
 
   // check to make sure there are the right number of arguments
   if (argc != 4) {
-    std::cerr << "WRENCH Workqueue Simulator" << std::endl;
+    std::cerr << "WRENCH WorkQueue Simulator" << std::endl;
     std::cerr << "Usage: " << argv[0]
               << " <xml platform file> <JSON or XML workflow file> <JSON simulation config file>"
               << std::endl;
