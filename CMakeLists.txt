@@ -30,6 +30,10 @@ set(SOURCE_FILES
         src/WorkQueue.cpp
         src/SimulationConfig.h
         src/SimulationConfig.cpp
+        src/WorkQueueService.h
+        src/WorkQueueService.cpp
+        src/WorkQueueWMS.h
+        src/WorkQueueWMS.cpp
         )
 
 set(TEST_FILES

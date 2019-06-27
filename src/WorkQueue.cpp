@@ -11,6 +11,7 @@
 #include <vector>
 #include <wrench-dev.h>
 #include "SimulationConfig.h"
+#include "WorkQueueWMS.h"
 
 XBT_LOG_NEW_DEFAULT_CATEGORY(WorkQueue, "Log category for WorkQueue");
 
@@ -68,6 +69,41 @@ int main(int argc, char **argv) {
 
   WRENCH_INFO("The workflow has %ld tasks", workflow.getNumberOfTasks());
 
+  // HTCondor service
+  auto htcondor_service = config.getHTCondorComputeService();
+
+  // file registry service
+  WRENCH_INFO("Instantiating a FileRegistryService on: %s", config.getFileRegistryHostname().c_str());
+  auto file_registry_service = simulation.add(new wrench::FileRegistryService(config.getFileRegistryHostname()));
+
+  // storage services
+  auto storage_services = config.getStorageServices();
+  auto storage_service = *storage_services.begin();
+
+  // create the wms
+  auto wms = simulation.add(new wrench::workqueue::WorkQueueWMS(config.getSubmitHostname(),
+                                                                htcondor_service,
+                                                                storage_service,
+                                                                file_registry_service.get()));
+
+  WRENCH_INFO("Staging input files");
+  auto input_files = workflow.getInputFiles();
+  try {
+    simulation.stageFiles(input_files, htcondor_service->getLocalStorageService());
+  } catch (std::runtime_error &e) {
+    std::cerr << "Exception: " << e.what() << std::endl;
+    return 0;
+  }
+
+  // simulation execution
+  WRENCH_INFO("Launching the Simulation...");
+  try {
+    simulation.launch();
+  } catch (std::runtime_error &e) {
+    std::cerr << "Exception: " << e.what() << std::endl;
+    return 0;
+  }
+  WRENCH_INFO("Simulation done!");
 
   return 0;
 }

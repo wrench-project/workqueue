@@ -20,6 +20,47 @@ namespace wrench {
 
         public:
             void loadProperties(wrench::Simulation &simulation, const std::string &filename);
+
+            std::string getSubmitHostname();
+
+            std::string getFileRegistryHostname();
+
+            HTCondorComputeService *getHTCondorComputeService();
+
+            std::set<StorageService *> getStorageServices();
+
+        private:
+
+            void instantiateBatch(std::string service_host, std::vector<std::string> hosts);
+
+            /**
+             * @brief Get the value for a key from the JSON properties file
+             *
+             * @tparam T
+             * @param keyName: property key that will be searched for
+             * @param jsonData: JSON object to extract the value for the provided key
+             * @param required: whether the property must exist
+             *
+             * @throw std::invalid_argument
+             * @return The value for the provided key, if present
+             */
+            template<class T>
+            T getPropertyValue(const std::string &keyName, const nlohmann::json &jsonData, const bool required = true) {
+              if (jsonData.find(keyName) == jsonData.end()) {
+                if (required) {
+                  throw std::invalid_argument("SimulationConfig::loadProperties(): Unable to find " + keyName);
+                } else {
+                  return T();
+                }
+              }
+              return jsonData.at(keyName);
+            }
+
+            std::string submit_hostname;
+            std::string file_registry_hostname;
+            std::set<ComputeService *> compute_services;
+            std::set<StorageService *> storage_services;
+            HTCondorComputeService *htcondor_service;
         };
     }
 }
