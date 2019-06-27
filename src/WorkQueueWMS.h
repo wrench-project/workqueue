@@ -23,9 +23,9 @@ namespace wrench {
 
         public:
             WorkQueueWMS(const std::string &hostname,
-                         const HTCondorComputeService *htcondor_service,
-                         const StorageService *storage_service,
-                         FileRegistryService *file_registry_service);
+                         const std::shared_ptr<HTCondorComputeService> htcondor_service,
+                         const std::shared_ptr<StorageService> storage_service,
+                         std::shared_ptr<FileRegistryService> file_registry_service);
 
         protected:
             /***********************/
@@ -38,6 +38,11 @@ namespace wrench {
 
         private:
             int main() override;
+
+            /** @brief The job manager */
+            std::shared_ptr<JobManager> job_manager;
+            /** @brief */
+            std::shared_ptr<WorkQueueService> workqueue_service;
         };
 
     }

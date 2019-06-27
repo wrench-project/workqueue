@@ -49,7 +49,7 @@ namespace wrench {
             auto storage_service = simulation.add(
                     new SimpleStorageService(storage_host, getPropertyValue<double>("capacity", storage)));
             storage_service->setNetworkTimeoutValue(30);
-            this->storage_services.insert(storage_service.get());
+            this->storage_services.insert(storage_service);
           }
 
           // compute resources
@@ -69,8 +69,8 @@ namespace wrench {
           }
 
           // build the HTCondorService
-          this->htcondor_service = simulation.add(
-                  new HTCondorComputeService(this->submit_hostname, "local", std::move(this->compute_services))).get();
+          this->htcondor_service.reset(simulation.add(
+                  new HTCondorComputeService(this->submit_hostname, "local", std::move(this->compute_services))).get());
         }
 
         /**
@@ -93,7 +93,7 @@ namespace wrench {
          * @brief Get a pointer to the HTCondorService
          * @return A pointer to the HTCondorService
          */
-        HTCondorComputeService *SimulationConfig::getHTCondorComputeService() {
+        std::shared_ptr<HTCondorComputeService> SimulationConfig::getHTCondorComputeService() {
           return this->htcondor_service;
         }
 
@@ -101,7 +101,7 @@ namespace wrench {
          * @brief Get a set of pointers to wrench::StorageService available for the simulation
          * @return A set of storage services
          */
-        std::set<StorageService *> SimulationConfig::getStorageServices() {
+        std::set<std::shared_ptr<StorageService>> SimulationConfig::getStorageServices() {
           return this->storage_services;
         }
 

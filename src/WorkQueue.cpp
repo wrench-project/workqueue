@@ -84,7 +84,7 @@ int main(int argc, char **argv) {
   auto wms = simulation.add(new wrench::workqueue::WorkQueueWMS(config.getSubmitHostname(),
                                                                 htcondor_service,
                                                                 storage_service,
-                                                                file_registry_service.get()));
+                                                                file_registry_service));
 
   WRENCH_INFO("Staging input files");
   auto input_files = workflow.getInputFiles();

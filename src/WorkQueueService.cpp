@@ -84,22 +84,22 @@ namespace wrench {
         bool WorkQueueService::processNextMessage() {
           // Wait for a workflow execution event
           std::unique_ptr<wrench::WorkflowExecutionEvent> event;
-          try {
-            event = this->workflow->waitForNextExecutionEvent();
-
-          } catch (wrench::WorkflowExecutionException &e) {
-            throw std::runtime_error("Error while getting and execution event: " + e.getCause()->toString());
-          }
-          switch (event->type) {
-            case wrench::WorkflowExecutionEvent::STANDARD_JOB_COMPLETION: {
-              StandardJob *job = (dynamic_cast<StandardJobCompletedEvent *>(event.get()))->standard_job;
-              this->processStandardJobCompletion(job);
-              break;
-            }
-            default: {
-              throw std::runtime_error("Unexpected workflow execution event: " + std::to_string((int) (event->type)));
-            }
-          }
+//          try {
+//            event = this->workflow->waitForNextExecutionEvent();
+//
+//          } catch (wrench::WorkflowExecutionException &e) {
+//            throw std::runtime_error("Error while getting and execution event: " + e.getCause()->toString());
+//          }
+//          switch (event->type) {
+//            case wrench::WorkflowExecutionEvent::STANDARD_JOB_COMPLETION: {
+//              StandardJob *job = (dynamic_cast<StandardJobCompletedEvent *>(event.get()))->standard_job;
+//              this->processStandardJobCompletion(job);
+//              break;
+//            }
+//            default: {
+//              throw std::runtime_error("Unexpected workflow execution event: " + std::to_string((int) (event->type)));
+//            }
+//          }
           return true;
         }
 

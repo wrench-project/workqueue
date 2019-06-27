@@ -25,9 +25,9 @@ namespace wrench {
 
             std::string getFileRegistryHostname();
 
-            HTCondorComputeService *getHTCondorComputeService();
+            std::shared_ptr<HTCondorComputeService> getHTCondorComputeService();
 
-            std::set<StorageService *> getStorageServices();
+            std::set<std::shared_ptr<StorageService>> getStorageServices();
 
         private:
 
@@ -59,8 +59,8 @@ namespace wrench {
             std::string submit_hostname;
             std::string file_registry_hostname;
             std::set<ComputeService *> compute_services;
-            std::set<StorageService *> storage_services;
-            HTCondorComputeService *htcondor_service;
+            std::set<std::shared_ptr<StorageService>> storage_services;
+            std::shared_ptr<HTCondorComputeService> htcondor_service;
         };
     }
 }
