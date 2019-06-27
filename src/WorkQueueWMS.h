@@ -11,7 +11,6 @@
 #define WORKQUEUE_WORKQUEUEWMS_H
 
 #include <wrench-dev.h>
-#include "WorkQueueService.h"
 
 namespace wrench {
     namespace workqueue {
@@ -23,8 +22,8 @@ namespace wrench {
 
         public:
             WorkQueueWMS(const std::string &hostname,
-                         const std::shared_ptr<HTCondorComputeService> htcondor_service,
-                         const std::shared_ptr<StorageService> storage_service,
+                         const std::set<std::shared_ptr<ComputeService>> &htcondor_service,
+                         const std::set<std::shared_ptr<StorageService>> &storage_service,
                          std::shared_ptr<FileRegistryService> file_registry_service);
 
         protected:
@@ -39,10 +38,22 @@ namespace wrench {
         private:
             int main() override;
 
+            void addJobsToQueue(std::vector<StandardJob *> &jobs);
+
+            void processEventPilotJobStart(std::shared_ptr<PilotJobStartedEvent> event) override;
+
+            void processEventStandardJobCompletion(std::shared_ptr<StandardJobCompletedEvent> event) override;
+
+            void submitJobToPilot(PilotJob *pilot_job);
+
             /** @brief The job manager */
             std::shared_ptr<JobManager> job_manager;
-            /** @brief */
-            std::shared_ptr<WorkQueueService> workqueue_service;
+            /** @brief Whether the workflow execution should be aborted */
+            bool abort = false;
+            /** **/
+            std::deque<StandardJob *> pending_jobs;
+            /** **/
+            std::map<StandardJob *, PilotJob *> pilot_running_jobs;
         };
 
     }

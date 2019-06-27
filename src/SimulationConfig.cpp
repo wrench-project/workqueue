@@ -71,6 +71,12 @@ namespace wrench {
           // build the HTCondorService
           this->htcondor_service.reset(simulation.add(
                   new HTCondorComputeService(this->submit_hostname, "local", std::move(this->compute_services))).get());
+
+          // creating local storage service
+          auto local_storage_service = simulation.add(
+                  new SimpleStorageService(this->submit_hostname, 1000000000000000.0));
+          local_storage_service->setNetworkTimeoutValue(30);
+          this->htcondor_service->setLocalStorageService(local_storage_service);
         }
 
         /**
@@ -113,15 +119,10 @@ namespace wrench {
          */
         void SimulationConfig::instantiateBatch(std::string service_host, std::vector<std::string> hosts) {
 
-          std::map<std::string, std::string> messagepayload_properties_list = {
-                  {BatchComputeServiceMessagePayload::SUBMIT_STANDARD_JOB_REQUEST_MESSAGE_PAYLOAD, "122880000"},
-                  {BatchComputeServiceMessagePayload::SUBMIT_STANDARD_JOB_ANSWER_MESSAGE_PAYLOAD,  "1024"},
-                  {BatchComputeServiceMessagePayload::STANDARD_JOB_DONE_MESSAGE_PAYLOAD,           "512000000"},
-          };
-
           this->compute_services.insert(new wrench::BatchComputeService(
-                  service_host, hosts, 0, {{wrench::BareMetalComputeServiceProperty::SUPPORTS_PILOT_JOBS, "true"}},
-                  {{wrench::BareMetalComputeServiceMessagePayload::STOP_DAEMON_MESSAGE_PAYLOAD, 1024}}));
+                  service_host, hosts, 0,
+                  {{wrench::BatchComputeServiceProperty::SUPPORTS_PILOT_JOBS, "true"}},
+                  {{wrench::BatchComputeServiceMessagePayload::STOP_DAEMON_MESSAGE_PAYLOAD, 1024}}));
         }
     }
 }

@@ -15,7 +15,7 @@
 namespace wrench {
 
     class Simulation;
-    
+
     namespace workqueue {
 
         /**
@@ -36,8 +36,6 @@ namespace wrench {
 
             void setSimulation(Simulation *simulation);
 
-            void setServiceCallbackMailbox(const std::string &service_callback_mailbox);
-
             /***********************/
             /** \endcond           */
             /***********************/
@@ -45,8 +43,6 @@ namespace wrench {
         protected:
             /** @brief */
             Simulation *simulation;
-            /** @brief */
-            std::string service_callback_mailbox;
         };
 
     }
