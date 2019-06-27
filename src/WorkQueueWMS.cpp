@@ -10,7 +10,7 @@
 #include "WorkQueueWMS.h"
 #include "WorkQueueScheduler.h"
 
-XBT_LOG_NEW_DEFAULT_CATEGORY(WorkQueueWMS, "Log category for DAGMan");
+WRENCH_LOG_NEW_DEFAULT_CATEGORY(WorkQueueWMS, "Log category for DAGMan");
 
 namespace wrench {
     namespace workqueue {
@@ -26,7 +26,7 @@ namespace wrench {
         WorkQueueWMS::WorkQueueWMS(const std::string &hostname,
                                    const std::set<std::shared_ptr<wrench::ComputeService>> &compute_services,
                                    const std::set<std::shared_ptr<wrench::StorageService>> &storage_services,
-                                   std::shared_ptr<FileRegistryService> file_registry_service) :
+                                   std::shared_ptr<FileRegistryService> &file_registry_service) :
                 WMS(nullptr, std::unique_ptr<PilotJobScheduler>(new WorkQueueScheduler()),
                     compute_services, storage_services, {},
                     file_registry_service, hostname, "workqueue") {}
@@ -53,14 +53,6 @@ namespace wrench {
           auto default_compute_service = *this->getAvailableComputeServices<HTCondorComputeService>().begin();
           auto default_storage_service = default_compute_service->getLocalStorageService();
 
-//          // starting WorkQueue service
-//          auto workqueue_service = std::make_shared<WorkQueueService>(this->hostname,
-//                                                                      this->getWorkflow(),
-//                                                                      this->job_manager,
-//                                                                      *this->getAvailableStorageServices().begin());
-//          workqueue_service->simulation = this->simulation;
-//          workqueue_service->start(workqueue_service, true, true);
-
           // Create a job manager
           this->job_manager = this->createJobManager();
           auto data_movement_manager = this->createDataMovementManager();
@@ -84,12 +76,15 @@ namespace wrench {
               }
 
               ready_jobs.push_back(this->job_manager->createStandardJob(task, file_locations));
-              std::cerr << "--- ADDING JOB TO QUEUE: " << task->getID() << std::endl;
             }
 
             if (not ready_jobs.empty()) {
               this->addJobsToQueue(ready_jobs);
-              pilot_job_scheduler->schedulePilotJobs(this->getAvailableComputeServices<ComputeService>());
+              int count = 0;
+              while (count < ready_jobs.size()) {
+                pilot_job_scheduler->schedulePilotJobs(this->getAvailableComputeServices<ComputeService>());
+                count++;
+              }
             }
 
             // Wait for a workflow execution event, and process it
@@ -129,7 +124,6 @@ namespace wrench {
           for (auto job : jobs) {
             for (auto task : job->getTasks()) {
               task->setState(WorkflowTask::PENDING);
-              std::cerr << "----- TASK PENDING STATUS: " << task->getID() << std::endl;
             }
             this->pending_jobs.push_back(job);
           }
@@ -142,7 +136,6 @@ namespace wrench {
          */
         void WorkQueueWMS::processEventPilotJobStart(std::shared_ptr<wrench::PilotJobStartedEvent> event) {
           WRENCH_INFO("A pilot job has started: %s", event->pilot_job->getName().c_str());
-          std::cerr << "--- PENDING JOBS: " << this->pending_jobs.size() << std::endl;
           this->submitJobToPilot(event->pilot_job);
         }
 
@@ -159,7 +152,6 @@ namespace wrench {
           std::string callback_mailbox = job->popCallbackMailbox();
           for (auto task : job->getTasks()) {
             WRENCH_INFO("    Task completed: %s (%s)", task->getID().c_str(), callback_mailbox.c_str());
-            std::cerr << "----------- TASK STATUS: " << task->getState() << std::endl;
           }
           auto job_it = this->pilot_running_jobs.find(job);
           auto pilot_job = job_it->second;
@@ -179,15 +171,16 @@ namespace wrench {
             auto job = this->pending_jobs.front();
 
             std::map<std::string, std::string> specific_args;
+            job->pushCallbackMailbox(this->job_manager->mailbox_name);
             pilot_job->getComputeService()->submitStandardJob(job, specific_args);
             this->pilot_running_jobs.insert(std::make_pair(job, pilot_job));
 
             this->pending_jobs.pop_front();
-            std::cerr << "--- SUBMITTED FOR PILOT: " << job->getName() << std::endl;
+            WRENCH_INFO("Submitting %s to %s", job->getName().c_str(), pilot_job->getName().c_str());
             for (auto task : job->getTasks()) {
-              std::cerr << "------- TASK: " << task->getID() << std::endl;
+              WRENCH_INFO("  Task submitted: %s", task->getID().c_str());
             }
-            std::cerr << "--- PENDING JOBS: " << this->pending_jobs.size() << std::endl;
+            WRENCH_INFO("There are still %lu pending jobs", this->pending_jobs.size());
           }
         }
     }

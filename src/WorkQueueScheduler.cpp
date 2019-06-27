@@ -9,7 +9,7 @@
 
 #include "WorkQueueScheduler.h"
 
-XBT_LOG_NEW_DEFAULT_CATEGORY(WorkQueueScheduler, "Log category for WorkQueue Scheduler Daemon");
+WRENCH_LOG_NEW_DEFAULT_CATEGORY(WorkQueueScheduler, "Log category for WorkQueue Scheduler Daemon");
 
 namespace wrench {
     namespace workqueue {

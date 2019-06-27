@@ -24,7 +24,7 @@ namespace wrench {
             WorkQueueWMS(const std::string &hostname,
                          const std::set<std::shared_ptr<ComputeService>> &htcondor_service,
                          const std::set<std::shared_ptr<StorageService>> &storage_service,
-                         std::shared_ptr<FileRegistryService> file_registry_service);
+                         std::shared_ptr<FileRegistryService> &file_registry_service);
 
         protected:
             /***********************/

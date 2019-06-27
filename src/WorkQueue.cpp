@@ -13,7 +13,7 @@
 #include "SimulationConfig.h"
 #include "WorkQueueWMS.h"
 
-XBT_LOG_NEW_DEFAULT_CATEGORY(WorkQueue, "Log category for WorkQueue");
+WRENCH_LOG_NEW_DEFAULT_CATEGORY(WorkQueue, "Log category for WorkQueue");
 
 int main(int argc, char **argv) {
 

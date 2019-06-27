@@ -10,7 +10,7 @@
 #include <fstream>
 #include "SimulationConfig.h"
 
-XBT_LOG_NEW_DEFAULT_CATEGORY(SimulationConfig, "Log category for SimulationConfig");
+WRENCH_LOG_NEW_DEFAULT_CATEGORY(SimulationConfig, "Log category for SimulationConfig");
 
 namespace wrench {
     namespace workqueue {
