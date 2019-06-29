@@ -12,6 +12,7 @@
 #include <wrench-dev.h>
 #include "SimulationConfig.h"
 #include "WorkQueueWMS.h"
+#include "WorkQueueSimulationTimestampTypes.h"
 
 WRENCH_LOG_NEW_DEFAULT_CATEGORY(WorkQueue, "Log category for WorkQueue");
 
@@ -104,6 +105,57 @@ int main(int argc, char **argv) {
     return 0;
   }
   WRENCH_INFO("Simulation done!");
+
+  // statistics
+  std::map<std::string, double> start_stats;
+  std::map<std::string, double> completion_stats;
+  std::map<std::string, double> scheduled_stats;
+  std::map<std::string, double> duration_stats;
+
+  auto submit_trace = simulation.getOutput().getTrace<wrench::workqueue::SimulationTimestampJobSubmitted>();
+  for (auto &task : submit_trace) {
+    auto t = task->getContent();
+    start_stats.insert(std::make_pair(t->getTask()->getID(), t->getClock()));
+  }
+
+  auto scheduled_trace = simulation.getOutput().getTrace<wrench::workqueue::SimulationTimestampJobScheduled>();
+  for (auto &task : scheduled_trace) {
+    auto t = task->getContent();
+    scheduled_stats.insert(std::make_pair(t->getTask()->getID(), t->getClock()));
+  }
+
+  auto completion_trace = simulation.getOutput().getTrace<wrench::workqueue::SimulationTimestampJobCompletion>();
+  for (auto &task : completion_trace) {
+    auto t = task->getContent();
+    duration_stats.insert(
+            std::make_pair(t->getTask()->getID(), t->getTask()->getEndDate() - t->getTask()->getStartDate()));
+    completion_stats.insert(std::make_pair(t->getTask()->getID(), t->getClock()));
+  }
+
+  std::cerr << "=== WRENCH-WorkQueue: Task Execution Summary" << std::endl;
+  for (const auto &task : scheduled_stats) {
+    auto completion_time = (*completion_stats.find(task.first)).second;
+    double duration = completion_time - (*scheduled_stats.find(task.first)).second;
+
+    std::string task_name = task.first.substr(0, task.first.find("_"));
+    if (task_name == "clean") {
+      task_name = "clean_up";
+    } else if (task_name == "stage") {
+      task_name = task.first.substr(0, task.first.find("_", task.first.find("_") + 1));
+    } else if (task_name == "create") {
+      task_name = "create_dir";
+    }
+
+    std::cerr << "wrench," <<
+              task.first << "," <<
+              task.second << "," <<
+              completion_time << "," <<
+              completion_time - task.second << "," <<
+              duration << "," <<
+//              level << "," <<
+              "sand-filter-master" <<
+              std::endl;
+  }
 
   return 0;
 }

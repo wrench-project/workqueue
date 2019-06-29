@@ -42,6 +42,8 @@ namespace wrench {
 
             void processEventPilotJobStart(std::shared_ptr<PilotJobStartedEvent> event) override;
 
+            void processEventPilotJobExpiration(std::shared_ptr<PilotJobExpiredEvent> event) override;
+
             void processEventStandardJobCompletion(std::shared_ptr<StandardJobCompletedEvent> event) override;
 
             void submitJobToPilot(PilotJob *pilot_job);

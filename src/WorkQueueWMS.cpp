@@ -9,6 +9,7 @@
 
 #include "WorkQueueWMS.h"
 #include "WorkQueueScheduler.h"
+#include "WorkQueueSimulationTimestampTypes.h"
 
 WRENCH_LOG_NEW_DEFAULT_CATEGORY(WorkQueueWMS, "Log category for DAGMan");
 
@@ -66,6 +67,7 @@ namespace wrench {
             auto ready_tasks = this->getWorkflow()->getReadyTasks();
             std::vector<StandardJob *> ready_jobs;
 
+            int count = 0;
             for (auto task : ready_tasks) {
               std::map<WorkflowFile *, std::shared_ptr<StorageService>> file_locations;
               for (auto f : task->getInputFiles()) {
@@ -80,8 +82,8 @@ namespace wrench {
 
             if (not ready_jobs.empty()) {
               this->addJobsToQueue(ready_jobs);
-              int count = 0;
-              while (count < ready_jobs.size()) {
+              count = 0;
+              while (count < ready_jobs.size() && count < 33) {
                 pilot_job_scheduler->schedulePilotJobs(this->getAvailableComputeServices<ComputeService>());
                 count++;
               }
@@ -123,6 +125,9 @@ namespace wrench {
         void WorkQueueWMS::addJobsToQueue(std::vector<StandardJob *> &jobs) {
           for (auto job : jobs) {
             for (auto task : job->getTasks()) {
+              // create job submitted event
+              this->simulation->getOutput().addTimestamp<SimulationTimestampJobSubmitted>(
+                      new SimulationTimestampJobSubmitted(task));
               task->setState(WorkflowTask::PENDING);
             }
             this->pending_jobs.push_back(job);
@@ -144,6 +149,22 @@ namespace wrench {
          *
          * @param event:
          */
+        void WorkQueueWMS::processEventPilotJobExpiration(std::shared_ptr<wrench::PilotJobExpiredEvent> event) {
+          WRENCH_INFO("A pilot job has expired: %s", event->pilot_job->getName().c_str());
+          for (auto entry : this->pilot_running_jobs) {
+            if (entry.second == event->pilot_job) {
+              this->pending_jobs.push_front(entry.first);
+              this->pilot_running_jobs.erase(this->pilot_running_jobs.find(entry.first));
+              break;
+            }
+          }
+        }
+
+        /**
+         * @brief
+         *
+         * @param event:
+         */
         void WorkQueueWMS::processEventStandardJobCompletion(
                 std::shared_ptr<wrench::StandardJobCompletedEvent> event) {
 
@@ -152,6 +173,9 @@ namespace wrench {
           std::string callback_mailbox = job->popCallbackMailbox();
           for (auto task : job->getTasks()) {
             WRENCH_INFO("    Task completed: %s (%s)", task->getID().c_str(), callback_mailbox.c_str());
+            // create job completion event
+            this->simulation->getOutput().addTimestamp<SimulationTimestampJobCompletion>(
+                    new SimulationTimestampJobCompletion(task));
           }
           auto job_it = this->pilot_running_jobs.find(job);
           auto pilot_job = job_it->second;
@@ -179,6 +203,9 @@ namespace wrench {
             WRENCH_INFO("Submitting %s to %s", job->getName().c_str(), pilot_job->getName().c_str());
             for (auto task : job->getTasks()) {
               WRENCH_INFO("  Task submitted: %s", task->getID().c_str());
+              // create job scheduled event
+              this->simulation->getOutput().addTimestamp<SimulationTimestampJobScheduled>(
+                      new SimulationTimestampJobScheduled(task));
             }
             WRENCH_INFO("There are still %lu pending jobs", this->pending_jobs.size());
           }

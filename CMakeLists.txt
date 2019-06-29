@@ -34,6 +34,8 @@ set(SOURCE_FILES
         src/WorkQueueWMS.cpp
         src/WorkQueueScheduler.h
         src/WorkQueueScheduler.cpp
+        src/WorkQueueSimulationTimestampTypes.h
+        src/WorkQueueSimulationTimestampTypes.cpp
         )
 
 set(TEST_FILES

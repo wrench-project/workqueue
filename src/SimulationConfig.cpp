@@ -70,7 +70,19 @@ namespace wrench {
 
           // build the HTCondorService
           this->htcondor_service.reset(simulation.add(
-                  new HTCondorComputeService(this->submit_hostname, "local", std::move(this->compute_services))).get());
+                  new HTCondorComputeService(
+                          this->submit_hostname, "local",
+                          std::move(this->compute_services), {}, {
+                                  {HTCondorCentralManagerServiceMessagePayload::SUBMIT_STANDARD_JOB_REQUEST_MESSAGE_PAYLOAD, 1024},
+                                  {HTCondorCentralManagerServiceMessagePayload::SUBMIT_STANDARD_JOB_ANSWER_MESSAGE_PAYLOAD, 1024},
+                                  {HTCondorCentralManagerServiceMessagePayload::SUBMIT_PILOT_JOB_REQUEST_MESSAGE_PAYLOAD, 51200000},
+                                  {HTCondorCentralManagerServiceMessagePayload::SUBMIT_PILOT_JOB_ANSWER_MESSAGE_PAYLOAD, 51200000},
+                                  {HTCondorCentralManagerServiceMessagePayload::PILOT_JOB_STARTED_MESSAGE_PAYLOAD, 1024},
+                                  {HTCondorCentralManagerServiceMessagePayload::PILOT_JOB_EXPIRED_MESSAGE_PAYLOAD, 1024},
+                                  {HTCondorCentralManagerServiceMessagePayload::STANDARD_JOB_DONE_MESSAGE_PAYLOAD, 1024},
+                                  {HTCondorCentralManagerServiceMessagePayload::RESOURCE_DESCRIPTION_REQUEST_MESSAGE_PAYLOAD, 1024},
+                                  {HTCondorCentralManagerServiceMessagePayload::RESOURCE_DESCRIPTION_ANSWER_MESSAGE_PAYLOAD, 1024}
+                          })).get());
 
           // creating local storage service
           auto local_storage_service = simulation.add(
