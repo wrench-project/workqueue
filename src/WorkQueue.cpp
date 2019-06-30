@@ -9,7 +9,7 @@
 
 #include <iostream>
 #include <vector>
-#include <wrench-dev.h>
+#include <wrench.h>
 #include "SimulationConfig.h"
 #include "WorkQueueWMS.h"
 #include "WorkQueueSimulationTimestampTypes.h"
@@ -152,7 +152,6 @@ int main(int argc, char **argv) {
               completion_time << "," <<
               completion_time - task.second << "," <<
               duration << "," <<
-//              level << "," <<
               "sand-filter-master" <<
               std::endl;
   }

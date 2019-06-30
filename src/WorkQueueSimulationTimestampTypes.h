@@ -10,7 +10,7 @@
 #ifndef WORKQUEUE_SIMULATIONTIMESTAMPTYPES_H
 #define WORKQUEUE_SIMULATIONTIMESTAMPTYPES_H
 
-#include <wrench-dev.h>
+#include <wrench.h>
 
 namespace wrench {
 
