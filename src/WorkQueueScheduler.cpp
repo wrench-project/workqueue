@@ -35,13 +35,15 @@ namespace wrench {
         void WorkQueueScheduler::schedulePilotJobs(
                 const std::set<std::shared_ptr<wrench::ComputeService>> &compute_services) {
 
-          // TODO: select htcondor service based on condor queue name
-          auto htcondor_service = *compute_services.begin();
+            // TODO: select htcondor service based on condor queue name
+            auto htcondor_service = *compute_services.begin();
 
-          auto pilot_job = this->getJobManager()->createPilotJob();
-          std::map<std::string, std::string> service_specific_args;
+            auto pilot_job = this->getJobManager()->createPilotJob();
+            std::map<std::string, std::string> service_specific_args = {{"-N", "1"},
+                                                                        {"-c", "1"},
+                                                                        {"-t", "100"}};
 
-          htcondor_service->submitPilotJob(pilot_job, service_specific_args);
+            htcondor_service->submitPilotJob(pilot_job, service_specific_args);
         }
 
         /**
@@ -50,7 +52,7 @@ namespace wrench {
          * @param simulation: a pointer to the simulation object
          */
         void WorkQueueScheduler::setSimulation(Simulation *simulation) {
-          this->simulation = simulation;
+            this->simulation = simulation;
         }
     }
 }
