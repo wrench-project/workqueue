@@ -16,10 +16,9 @@
 #include "WorkQueueWMS.h"
 #include "WorkQueueSimulationTimestampTypes.h"
 
-WRENCH_LOG_NEW_DEFAULT_CATEGORY(WorkQueue, "Log category for WorkQueue");
+XBT_LOG_NEW_DEFAULT_CATEGORY(WorkQueue, "Log category for WorkQueue");
 
 int main(int argc, char **argv) {
-
     // create and initialize the simulation
     wrench::Simulation simulation;
     simulation.init(&argc, argv);
@@ -94,7 +93,7 @@ int main(int argc, char **argv) {
     auto input_files = workflow->getInputFiles();
     try {
         for (auto file : input_files) {
-            simulation.stageFile(file.second, htcondor_service->getLocalStorageService());
+            simulation.stageFile(file, htcondor_service->getLocalStorageService());
         }
     } catch (std::runtime_error &e) {
         std::cerr << "Exception: " << e.what() << std::endl;

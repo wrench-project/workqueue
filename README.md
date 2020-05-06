@@ -6,7 +6,8 @@
 
 <img src="https://raw.githubusercontent.com/wrench-project/wrench/master/doc/images/logo-vertical.png" width="100" />
 
-This project is a [WRENCH](http://wrench-project.org)-based simulator of the [WorkQueue](https://ccl.cse.nd.edu/software/workqueue/) framework.
+This project is a [WRENCH](http://wrench-project.org)-based simulator 
+of the [WorkQueue](https://ccl.cse.nd.edu/software/workqueue/) framework.
 
 
 ## Prerequisites
@@ -24,7 +25,7 @@ And, one of the following:
 
 ## Dependencies
 
-- [WRENCH](http://wrench-project.org/) - [version 1.6-dev](https://github.com/wrench-project/wrench)
+- [WRENCH](http://wrench-project.org/) - [version 1.6](https://github.com/wrench-project/wrench)
 
 
 ## Building From Source
@@ -43,8 +44,9 @@ make install  # try "sudo make install" if you do not have the permission to wri
 The main channel to reach the WRENCH-WorkQueue team is via the support email: 
 [support@wrench-project.org](mailto:support@wrench-project.org).
 
-**Bug Report / Feature Request:** our preferred channel to report a bug or request a feature is via  
-WRENCH-WorkQueue' [Github Issues Track](https://github.com/wrench-project/workqueue/issues).
+**Bug Report / Feature Request:** our preferred channel to report a bug or request 
+a feature is via WRENCH-WorkQueue's 
+[Github Issues Track](https://github.com/wrench-project/workqueue/issues).
 
 
 [travis-badge]:             https://travis-ci.org/wrench-project/workqueue.svg?branch=master
@@ -52,4 +54,3 @@ WRENCH-WorkQueue' [Github Issues Track](https://github.com/wrench-project/workqu
 [license-badge]:            https://img.shields.io/badge/License-LGPL%20v3-blue.svg
 [release-badge]:            https://img.shields.io/github/release/wrench-project/workqueue/all.svg
 [release-link]:             https://github.com/wrench-project/workqueue/releases
-

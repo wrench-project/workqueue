@@ -10,7 +10,7 @@
 #include <fstream>
 #include "SimulationConfig.h"
 
-WRENCH_LOG_NEW_DEFAULT_CATEGORY(SimulationConfig, "Log category for SimulationConfig");
+XBT_LOG_NEW_DEFAULT_CATEGORY(SimulationConfig, "Log category for SimulationConfig");
 
 namespace wrench {
     namespace workqueue {
@@ -25,7 +25,6 @@ namespace wrench {
          * @throw std::invalid_argument
          */
         void SimulationConfig::loadProperties(wrench::Simulation &simulation, const std::string &filename) {
-
             std::ifstream file;
             nlohmann::json json_data;
 
@@ -130,7 +129,6 @@ namespace wrench {
          * @param hosts: vector of hosts to be instantiated
          */
         void SimulationConfig::instantiateBatch(std::string service_host, std::vector<std::string> hosts) {
-
             this->compute_services.insert(new wrench::BatchComputeService(
                     service_host, hosts, "",
                     {{wrench::BatchComputeServiceProperty::SUPPORTS_PILOT_JOBS, "true"}},

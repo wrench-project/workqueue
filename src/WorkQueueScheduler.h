@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019. The WRENCH Team.
+ * Copyright (c) 2019-2020. The WRENCH Team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,6 @@ namespace wrench {
          * @brief WorkQueue scheduler daemon
          */
         class WorkQueueScheduler : public PilotJobScheduler {
-
         public:
             WorkQueueScheduler();
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2019. The WRENCH Team.
+ * Copyright (c) 2019-2020. The WRENCH Team.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,6 @@ namespace wrench {
     namespace workqueue {
 
         class SimulationConfig {
-
         public:
             void loadProperties(wrench::Simulation &simulation, const std::string &filename);
 
@@ -30,7 +29,6 @@ namespace wrench {
             std::set<std::shared_ptr<StorageService>> getStorageServices();
 
         private:
-
             void instantiateBatch(std::string service_host, std::vector<std::string> hosts);
 
             /**

@@ -11,7 +11,7 @@
 #include "WorkQueueScheduler.h"
 #include "WorkQueueSimulationTimestampTypes.h"
 
-WRENCH_LOG_NEW_DEFAULT_CATEGORY(WorkQueueWMS, "Log category for DAGMan");
+XBT_LOG_NEW_DEFAULT_CATEGORY(WorkQueueWMS, "Log category for WorkQueue WMS");
 
 namespace wrench {
     namespace workqueue {
@@ -163,9 +163,7 @@ namespace wrench {
          *
          * @param event:
          */
-        void WorkQueueWMS::processEventStandardJobCompletion(
-                std::shared_ptr<wrench::StandardJobCompletedEvent> event) {
-
+        void WorkQueueWMS::processEventStandardJobCompletion(std::shared_ptr<wrench::StandardJobCompletedEvent> event) {
             auto job = event->standard_job;WRENCH_INFO("A standard job has completed job %s", job->getName().c_str());
             std::string callback_mailbox = job->popCallbackMailbox();
             for (auto task : job->getTasks()) { WRENCH_INFO("    Task completed: %s (%s)", task->getID().c_str(),
