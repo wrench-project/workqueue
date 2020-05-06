@@ -1,6 +1,7 @@
 [![Build Status][travis-badge]][travis-link]
 [![GitHub Release][release-badge]][release-link]
 [![License: LGPL v3][license-badge]](LICENSE)
+[![CodeFactor][codefactor-badge]][codefactor-link]
 
 # WRENCH-WorkQueue Implementation
 
@@ -49,8 +50,10 @@ a feature is via WRENCH-WorkQueue's
 [Github Issues Track](https://github.com/wrench-project/workqueue/issues).
 
 
-[travis-badge]:             https://travis-ci.org/wrench-project/workqueue.svg?branch=master
-[travis-link]:              https://travis-ci.org/wrench-project/workqueue
-[license-badge]:            https://img.shields.io/badge/License-LGPL%20v3-blue.svg
-[release-badge]:            https://img.shields.io/github/release/wrench-project/workqueue/all.svg
-[release-link]:             https://github.com/wrench-project/workqueue/releases
+[travis-badge]:          https://travis-ci.org/wrench-project/workqueue.svg?branch=master
+[travis-link]:           https://travis-ci.org/wrench-project/workqueue
+[license-badge]:         https://img.shields.io/badge/License-LGPL%20v3-blue.svg
+[release-badge]:         https://img.shields.io/github/release/wrench-project/workqueue/all.svg
+[release-link]:          https://github.com/wrench-project/workqueue/releases
+[codefactor-badge]:      https://www.codefactor.io/repository/github/wrench-project/workqueue/badge
+[codefactor-link]:       https://www.codefactor.io/repository/github/wrench-project/workqueue
