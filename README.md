@@ -10,6 +10,12 @@
 This project is a [WRENCH](http://wrench-project.org)-based simulator 
 of the [WorkQueue](https://ccl.cse.nd.edu/software/workqueue/) framework.
 
+**WRENCH Research Paper:**
+- H. Casanova, R. Ferreira da Silva, R. Tanaka, S. Pandey, G. Jethwani, W. Koch, S.
+  Albrecht, J. Oeth, and F. Suter, [Developing Accurate and Scalable Simulators of
+  Production Workflow Management Systems with 
+  WRENCH](https://rafaelsilva.com/files/publications/casanova2020fgcs.pdf), 
+  Future Generation Computer Systems, 2020. 
 
 ## Prerequisites
 
